@@ -1,0 +1,86 @@
+---
+title: "Class Assignment 2- PCA"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  tidy.opts=list(width.cutoff=80),
+  tidy=TRUE,
+  warning=FALSE, 
+  message=FALSE
+)
+```
+
+**Problem 1**- Use the TTU student evalauations data. See the attached file for an explanation of the variables. We analyze the result of 10 questions. 
+
+```{r}
+evaluation <- read.csv("https://raw.githubusercontent.com/asheikhz2/TTU_Zadeh/main/evals.csv")
+mydata <- evaluation[,3:12]    # select variables to use 
+mydata <- na.omit(mydata) # you can do listwise cleaning for missing values
+head(mydata)
+```
+
+a) Perform principal component analysis.
+```{r}
+mydata_pca <- princomp(mydata, cor = T)
+summary(mydata_pca, loading = T)
+```
+
+b) How many components represents more than 75\% of the variability of the data?
+Answer : Two components represents more then 75% , Com1 : 71.26% , Com2: 6.95% 
+
+c) Attach a meaning to the PCs that cover more than 75\% of the variablity.
+
+Answer : 
+For com1: Students expressed strong satisfaction with how the instructor encouraged their learning.
+For com2: Students are highly satisfied that the instructor presented the information clearly. However, they strongly disagree that the instructor treated all students with respect.
+**Problem 2**- Use the US state crime data. 
+
+```{r}
+crime <- read.csv("https://raw.githubusercontent.com/asheikhz2/TTU_Zadeh/main/crime.csv", row.names = "STATE")
+head(crime)
+```
+
+
+a) Perform PCA using correlation matrix.
+```{r}
+crime_PCA <- princomp(crime, cor = T)
+summary(crime_PCA, loading = T)
+```
+
+b) How many components represents the most variability of the data?
+Answer : Two components represents more then 75% , Com1 : 58.79% , Com2: 17.7% 
+
+c) By looking at the loadings, determine a meaning for PC1 and PC2 dimensions. 
+Answer: 
+for PC1: All these variables have positive loadings, meaning they all contribute in the same direction to Comp.1. The crimes RAPE, ROBBERY, ASSAULT, and BURGLARY have the highest loadings on this component.
+
+for PC2: MURDER has the highest positive loading, while AUTO has the most negative. This indicates that areas with a higher value on Comp.2 might have higher murder rates but lower auto theft rates.
+
+d) Construct the biplot graph of the crime data. interpret the resulting biplot graph for "MISSISSIPI", "NEVADA", and "HAWAII". You can validate your conclusions by looking at the actual standardized data values. 
+
+```{r}
+biplot(crime_PCA, col = c("Black", "red"), cex = .45)
+```
+MISSISSIPPI:
+
+Located in the upper left quadrant of the plot.
+Closeness to vectors "MURDER" and "ASSAULT" indicates that MISSISSIPPI likely has higher standardized values for these crimes relative to its average.
+The state's position suggests that the occurrences of murder and assault might be higher in MISSISSIPPI compared to other states.
+
+
+NEVADA:
+
+Located in the right-middle part of the plot.
+Closest to the "ROBBERY" vector and not too far from the "RAPE" vector, implying that NEVADA might have a higher occurrence of robberies and rapes relative to its average.
+This positioning suggests that robberies (and to some extent, rapes) might be more prevalent in NEVADA compared to other states in the dataset.
+
+HAWAII:
+
+Located in the bottom right quadrant.
+Closeness to the vectors "LARCENY" and "AUTO" (presumably auto theft) suggests that HAWAII likely has higher standardized values for these crimes relative to its average.
+HAWAII might have a higher occurrence of larceny and auto theft compared to many other states in the dataset.
